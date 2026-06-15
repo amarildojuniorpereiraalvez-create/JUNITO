@@ -1,15 +1,14 @@
-if not game:IsLoaded() then
-game.Loaded:Wait()
+if not game() then
+game.Loaded()
 end
 
-local Players = game:GetService("Players")
+local Players = game("Players")
 local player = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
+local playerGui = player("PlayerGui")
 
 local ORIGINAL_URL = "https://raw.githubusercontent.com/ZhangJunZ84/twvzyyds/refs/heads/main/animeastral.lua"
 
 local NEW_SHORT_NAME = "JR"
-local NEW_FULL_NAME = "Junioor"
 local NEW_DISCORD = "https://discord.gg/G2gMadWRRx"
 local NEW_ICON = "rbxassetid://114656274027180"
 
@@ -26,6 +25,7 @@ text = text:gsub("TWVZ", NEW_SHORT_NAME)
 text = text:gsub("twvz", string.lower(NEW_SHORT_NAME))
 text = text:gsub(OLD_DISCORD_1, NEW_DISCORD)
 text = text:gsub(OLD_DISCORD_2, NEW_DISCORD)
+text = text:gsub("https://twvz.click", NEW_DISCORD)
 
 return text
 
@@ -33,7 +33,7 @@ end
 
 local function patchObject(obj)
 pcall(function()
-if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
+if obj("TextLabel") or obj("TextButton") or obj("TextBox") then
 obj.Text = replaceText(obj.Text)
 end
 
@@ -49,12 +49,12 @@ end)
 end
 
 local function patchAll()
-for _, obj in ipairs(playerGui:GetDescendants()) do
+for _, obj in ipairs(playerGui()) do
 patchObject(obj)
 end
 end
 
-playerGui.DescendantAdded:Connect(function(obj)
+playerGui.DescendantAdded(function(obj)
 task.wait()
 patchObject(obj)
 end)
@@ -65,7 +65,7 @@ if realSetClipboard then
 local function fixedSetClipboard(text)
 text = tostring(text)
 
-    if text:find("discord.gg") then
+    if text:find("discord.gg") or text:find("twvz.click") then
         text = NEW_DISCORD
     end
 
@@ -82,8 +82,10 @@ end)
 
 end
 
+print("[JR] Carregando Anime Astral original...")
+
 local ok, err = pcall(function()
-local source = game:HttpGet(ORIGINAL_URL)
+local source = game(ORIGINAL_URL)
 
 if source:find("404: Not Found") then
     error("animeastral.lua original nao encontrado.")
@@ -104,9 +106,13 @@ warn("[JR] Erro ao carregar Anime Astral original: " .. tostring(err))
 return
 end
 
-for i = 1, 60 do
+task.wait(0.5)
 patchAll()
-task.wait(0.2)
-end
+
+task.wait(1)
+patchAll()
+
+task.wait(2)
+patchAll()
 
 print("[JR] Anime Astral original carregado com nome, icon e Discord alterados.")
