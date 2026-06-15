@@ -2,9 +2,14 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
-local BASE_URL = "https://raw.githubusercontent.com/amarildojuniorpereiraalvez-create/JUNITO/refs/heads/main/loader.lua"
+local BASE_URL = "https://raw.githubusercontent.com/ZhangJunZ84/twvzyyds/refs/heads/main"
 
 local GAMES = {
+    [9186719164]  = "sailorpiece.lua",
+    [6718454990]  = "animeghost.lua",
+    [10032271327] = "worldfighters.lua",
+    [9792947201] = "slimerng.lua",
+    [7395930870] = "selllemons.lua",
     [9797806474] = "animeastral.lua",
 }
 
@@ -12,10 +17,10 @@ local gameId = game.GameId
 local scriptFile = GAMES[gameId]
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
-local DISCORD_URL = "https://discord.gg/jND7mB8T"
+local DISCORD_URL = "https://discord.gg/Wk9bHxEuef"
 
 if not scriptFile then
-    warn("[JUNIOOR] Unsupported game (GameId: " .. tostring(gameId) .. ")")
+    warn("[TWVZ] Unsupported game (GameId: " .. tostring(gameId) .. ")")
 
     local gui = Instance.new("ScreenGui")
     gui.Name = "LoaderBlock"
@@ -67,7 +72,7 @@ if not scriptFile then
     body.Size = UDim2.new(1, -40, 0, 60)
     body.Position = UDim2.fromOffset(20, 72)
     body.BackgroundTransparency = 1
-    body.Text = "Junioor does not have a script for this game yet, but you can join the discord and suggest it!"
+    body.Text = "TWVZ does not have a script for this game yet, but you can join the discord and suggest it!"
     body.TextColor3 = Color3.fromRGB(180, 180, 190)
     body.TextSize = 15
     body.Font = Enum.Font.Gotham
@@ -162,5 +167,5 @@ local ok, err = pcall(function()
 end)
 
 if not ok then
-    warn("[JUNIOOR] Failed to load " .. scriptFile .. ": " .. tostring(err))
+    warn("[TWVZ] Failed to load " .. scriptFile .. ": " .. tostring(err))
 end
