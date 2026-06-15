@@ -7,6 +7,7 @@ local ORIGINAL_URL = "https://raw.githubusercontent.com/ZhangJunZ84/twvzyyds/ref
 local NEW_NAME = "JR"
 local NEW_DISCORD = "https://discord.gg/G2gMadWRRx"
 local NEW_ICON = "rbxassetid://114656274027180"
+local NEW_ICON_ID = "114656274027180"
 
 print("[JR] Baixando Anime Astral original...")
 
@@ -21,9 +22,15 @@ source = source:gsub("https://discord.gg/jND7mB8T", NEW_DISCORD)
 source = source:gsub("https://twvz.click", NEW_DISCORD)
 
 source = source:gsub("rbxassetid://72031513619068", NEW_ICON)
-source = source:gsub("72031513619068", "114656274027180")
+source = source:gsub("72031513619068", NEW_ICON_ID)
 
-loadstring(source)()
+local fn, compileErr = loadstring(source)
+
+if not fn then
+    error(compileErr)
+end
+
+fn()
 
 end)
 
