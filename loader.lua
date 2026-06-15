@@ -3,7 +3,7 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
--- AGORA PUXA DO SEU GITHUB, NÃO DO TWVZ ORIGINAL
+-- PUXA DO SEU GITHUB, NÃO DO TWVZ ORIGINAL
 local BASE_URL = "https://raw.githubusercontent.com/amarildojuniorpereiraalvez-create/JUNITO/refs/heads/main"
 
 local GAMES = {
@@ -13,15 +13,11 @@ local GAMES = {
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
-local gameId = game.GameId
-local scriptFile = GAMES[gameId]
-
 local HUB_NAME = "Junioor"
-local SHORT_NAME = "JR"
 local DISCORD_URL = "https://discord.gg/G2gMadWRRx"
 
--- TROQUE PELO ID DO SEU ÍCONE JR DEPOIS DE ENVIAR A IMAGEM NO ROBLOX
-local BRAND_ICON = "rbxassetid://COLOQUE_AQUI_O_ID_DO_ICONE_JR"
+local gameId = game.GameId
+local scriptFile = GAMES[gameId]
 
 if not scriptFile then
     warn("[" .. HUB_NAME .. "] Unsupported game (GameId: " .. tostring(gameId) .. ")")
@@ -50,20 +46,9 @@ if not scriptFile then
     stroke.Thickness = 1
     stroke.Parent = container
 
-    local logo = Instance.new("ImageLabel")
-    logo.Size = UDim2.fromOffset(40, 40)
-    logo.Position = UDim2.fromOffset(20, 22)
-    logo.BackgroundTransparency = 1
-    logo.Image = BRAND_ICON
-    logo.Parent = container
-
-    local logoCorner = Instance.new("UICorner")
-    logoCorner.CornerRadius = UDim.new(0, 8)
-    logoCorner.Parent = logo
-
     local title = Instance.new("TextLabel")
-    title.Size = UDim2.new(1, -76, 0, 40)
-    title.Position = UDim2.fromOffset(70, 22)
+    title.Size = UDim2.new(1, -40, 0, 40)
+    title.Position = UDim2.fromOffset(20, 22)
     title.BackgroundTransparency = 1
     title.Text = "Game Not Supported"
     title.TextColor3 = Color3.fromRGB(255, 80, 80)
@@ -73,10 +58,10 @@ if not scriptFile then
     title.Parent = container
 
     local body = Instance.new("TextLabel")
-    body.Size = UDim2.new(1, -40, 0, 60)
+    body.Size = UDim2.new(1, -40, 0, 70)
     body.Position = UDim2.fromOffset(20, 72)
     body.BackgroundTransparency = 1
-    body.Text = HUB_NAME .. " ainda não tem script para este jogo. Entre no Discord para sugerir!"
+    body.Text = HUB_NAME .. " ainda não tem suporte para este jogo.\nDiscord: " .. DISCORD_URL
     body.TextColor3 = Color3.fromRGB(180, 180, 190)
     body.TextSize = 15
     body.Font = Enum.Font.Gotham
@@ -89,7 +74,7 @@ if not scriptFile then
     closeBtn.Position = UDim2.new(1, -42, 0, 10)
     closeBtn.BackgroundTransparency = 1
     closeBtn.Text = "X"
-    closeBtn.TextColor3 = Color3.fromRGB(120, 120, 140)
+    closeBtn.TextColor3 = Color3.fromRGB(255, 80, 80)
     closeBtn.TextSize = 18
     closeBtn.Font = Enum.Font.GothamBold
     closeBtn.Parent = container
@@ -98,20 +83,12 @@ if not scriptFile then
         gui:Destroy()
     end)
 
-    closeBtn.MouseEnter:Connect(function()
-        closeBtn.TextColor3 = Color3.fromRGB(255, 80, 80)
-    end)
-
-    closeBtn.MouseLeave:Connect(function()
-        closeBtn.TextColor3 = Color3.fromRGB(120, 120, 140)
-    end)
-
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(1, -40, 0, 42)
     btn.Position = UDim2.new(0, 20, 1, -62)
     btn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
     btn.BorderSizePixel = 0
-    btn.Text = "Copiar Discord do " .. HUB_NAME
+    btn.Text = "Copiar Discord"
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     btn.TextSize = 16
     btn.Font = Enum.Font.GothamBold
@@ -124,43 +101,10 @@ if not scriptFile then
     btn.MouseButton1Click:Connect(function()
         if setclipboard then
             setclipboard(DISCORD_URL)
+            btn.Text = "Discord copiado!"
+        else
+            btn.Text = "Clipboard indisponível"
         end
-
-        local notif = Instance.new("Frame")
-        notif.Size = UDim2.new(1, -40, 0, 36)
-        notif.Position = UDim2.new(0, 20, 0, btn.Position.Y.Offset + 48)
-        notif.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
-        notif.BorderSizePixel = 0
-        notif.Parent = container
-
-        local notifCorner = Instance.new("UICorner")
-        notifCorner.CornerRadius = UDim.new(0, 8)
-        notifCorner.Parent = notif
-
-        local notifStroke = Instance.new("UIStroke")
-        notifStroke.Color = Color3.fromRGB(60, 60, 80)
-        notifStroke.Thickness = 1
-        notifStroke.Parent = notif
-
-        local notifText = Instance.new("TextLabel")
-        notifText.Size = UDim2.new(1, -20, 1, 0)
-        notifText.Position = UDim2.fromOffset(10, 0)
-        notifText.BackgroundTransparency = 1
-        notifText.Text = setclipboard and "Discord do " .. HUB_NAME .. " copiado!" or "Clipboard não disponível"
-        notifText.TextColor3 = Color3.fromRGB(180, 180, 190)
-        notifText.TextSize = 14
-        notifText.Font = Enum.Font.Gotham
-        notifText.TextXAlignment = Enum.TextXAlignment.Center
-        notifText.Parent = notif
-
-        task.delay(2, function()
-            local TweenService = game:GetService("TweenService")
-            local tween = TweenService:Create(notif, TweenInfo.new(0.4), {BackgroundTransparency = 1})
-            TweenService:Create(notifText, TweenInfo.new(0.4), {TextTransparency = 1}):Play()
-            tween:Play()
-            tween.Completed:Wait()
-            notif:Destroy()
-        end)
     end)
 
     return
