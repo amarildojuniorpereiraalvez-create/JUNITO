@@ -1,31 +1,20 @@
-```lua
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
 local BASE_URL = "https://raw.githubusercontent.com/amarildojuniorpereiraalvez-create/JUNITO/refs/heads/main"
-
-local GAMES = {
-    [9797806474] = "animeastral.lua",
-}
-
-local gameId = game.GameId
-local scriptFile = GAMES[gameId]
-
-if not scriptFile then
-    warn("[JR] Game não suportado. GameId: " .. tostring(gameId))
-    return
-end
+local scriptFile = "animeastral.lua"
 
 local url = BASE_URL .. "/" .. scriptFile
 
-print("[JR] Carregando:", url)
+print("[JR] Tentando carregar:", url)
 
 local ok, err = pcall(function()
     loadstring(game:HttpGet(url))()
 end)
 
-if not ok then
-    warn("[JR] Erro ao carregar " .. scriptFile .. ": " .. tostring(err))
+if ok then
+    print("[JR] Loader executado com sucesso")
+else
+    warn("[JR] Erro no loader:", err)
 end
-```
