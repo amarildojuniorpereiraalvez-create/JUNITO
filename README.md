@@ -2,7 +2,7 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
-local BASE_URL = "https://raw.githubusercontent.com/ZhangJunZ84/twvzyyds/refs/heads/main"
+local BASE_URL = "https://raw.githubusercontent.com/amarildojuniorpereiraalvez-create/JUNITO/refs/heads/main/loader.lua"
 
 local GAMES = {
     [9186719164]  = "sailorpiece.lua",
