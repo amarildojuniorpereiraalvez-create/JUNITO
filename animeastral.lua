@@ -22,14 +22,12 @@ if typeof(text) ~= "string" then
 return text
 end
 
-```
 text = text:gsub("TWVZ", NEW_SHORT_NAME)
 text = text:gsub("twvz", string.lower(NEW_SHORT_NAME))
 text = text:gsub(OLD_DISCORD_1, NEW_DISCORD)
 text = text:gsub(OLD_DISCORD_2, NEW_DISCORD)
 
 return text
-```
 
 end
 
@@ -39,7 +37,6 @@ if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
 obj.Text = replaceText(obj.Text)
 end
 
-```
     if obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
         local img = tostring(obj.Image)
 
@@ -48,7 +45,6 @@ end
         end
     end
 end)
-```
 
 end
 
@@ -69,7 +65,6 @@ if realSetClipboard then
 local function fixedSetClipboard(text)
 text = tostring(text)
 
-```
     if text:find("discord.gg") then
         text = NEW_DISCORD
     end
@@ -84,14 +79,12 @@ pcall(function()
         setclipboard = fixedSetClipboard
     end
 end)
-```
 
 end
 
 local ok, err = pcall(function()
 local source = game:HttpGet(ORIGINAL_URL)
 
-```
 if source:find("404: Not Found") then
     error("animeastral.lua original nao encontrado.")
 end
@@ -103,7 +96,6 @@ if not fn then
 end
 
 fn()
-```
 
 end)
 
