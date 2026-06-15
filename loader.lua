@@ -1,12 +1,16 @@
 print("[JR] Loader iniciou")
 
+if not game.IsLoaded(game) then
+game.Loaded.Wait(game.Loaded)
+end
+
 local ORIGINAL_URL = "https://raw.githubusercontent.com/ZhangJunZ84/twvzyyds/refs/heads/main/animeastral.lua"
 
-local Players = game("Players")
-local CoreGui = game("CoreGui")
+local Players = game.GetService(game, "Players")
+local CoreGui = game.GetService(game, "CoreGui")
 
 local player = Players.LocalPlayer
-local playerGui = player("PlayerGui")
+local playerGui = player.WaitForChild(player, "PlayerGui")
 
 local NEW_NAME = "JR"
 local NEW_DISCORD = "https://discord.gg/G2gMadWRRx"
@@ -16,14 +20,47 @@ local OLD_ICON_ID = "72031513619068"
 
 local beforeGuis = {}
 
+local function getChildren(obj)
+local ok, result = pcall(function()
+return obj.GetChildren(obj)
+end)
+
+if ok and result then
+    return result
+end
+
+return {}
+
+end
+
+local function getDescendants(obj)
+local ok, result = pcall(function()
+return obj.GetDescendants(obj)
+end)
+
+if ok and result then
+    return result
+end
+
+return {}
+
+end
+
+local function isA(obj, className)
+local ok, result = pcall(function()
+return obj.IsA(obj, className)
+end)
+
+return ok and result
+
+end
+
 local function markBefore(container)
-pcall(function()
-for _, child in ipairs(container()) do
-if child("ScreenGui") then
+for _, child in ipairs(getChildren(container)) do
+if isA(child, "ScreenGui") then
 beforeGuis[child] = true
 end
 end
-end)
 end
 
 markBefore(playerGui)
@@ -33,7 +70,7 @@ local function isFromNewMenu(obj)
 local current = obj
 
 while current do
-    if current:IsA("ScreenGui") then
+    if isA(current, "ScreenGui") then
         return beforeGuis[current] ~= true
     end
 
@@ -53,19 +90,19 @@ if typeof(text) ~= "string" then
 return text
 end
 
-text = text:gsub("TWVZ", NEW_NAME)
-text = text:gsub("twvz", "jr")
-text = text:gsub("T W V Z", NEW_NAME)
+text = string.gsub(text, "TWVZ", NEW_NAME)
+text = string.gsub(text, "twvz", "jr")
+text = string.gsub(text, "T W V Z", NEW_NAME)
 
-text = text:gsub("https://discord%.gg/[%w%-%_]+", NEW_DISCORD)
-text = text:gsub("http://discord%.gg/[%w%-%_]+", NEW_DISCORD)
-text = text:gsub("discord%.gg/[%w%-%_]+", "discord.gg/G2gMadWRRx")
+text = string.gsub(text, "https://discord%.gg/[%w%-%_]+", NEW_DISCORD)
+text = string.gsub(text, "http://discord%.gg/[%w%-%_]+", NEW_DISCORD)
+text = string.gsub(text, "discord%.gg/[%w%-%_]+", "discord.gg/G2gMadWRRx")
 
-text = text:gsub("https://discord%.com/invite/[%w%-%_]+", NEW_DISCORD)
-text = text:gsub("http://discord%.com/invite/[%w%-%_]+", NEW_DISCORD)
+text = string.gsub(text, "https://discord%.com/invite/[%w%-%_]+", NEW_DISCORD)
+text = string.gsub(text, "http://discord%.com/invite/[%w%-%_]+", NEW_DISCORD)
 
-text = text:gsub("https://twvz%.click", NEW_DISCORD)
-text = text:gsub("http://twvz%.click", NEW_DISCORD)
+text = string.gsub(text, "https://twvz%.click", NEW_DISCORD)
+text = string.gsub(text, "http://twvz%.click", NEW_DISCORD)
 
 return text
 
@@ -74,7 +111,7 @@ end
 local fixedButtons = {}
 
 local function fixDiscordButton(obj)
-if not obj("TextButton") then
+if not isA(obj, "TextButton") then
 return
 end
 
@@ -84,10 +121,10 @@ end
 
 local lowerText = string.lower(tostring(obj.Text))
 
-if lowerText:find("discord") or lowerText:find("server") or lowerText:find("invite") then
+if string.find(lowerText, "discord") or string.find(lowerText, "server") or string.find(lowerText, "invite") then
     fixedButtons[obj] = true
 
-    obj.MouseButton1Click:Connect(function()
+    obj.MouseButton1Click.Connect(obj.MouseButton1Click, function()
         if setclipboard then
             setclipboard(NEW_DISCORD)
         end
@@ -106,28 +143,21 @@ end
 end
 
 local function fixImage(obj)
-if not (obj("ImageLabel") or obj("ImageButton")) then
+if not (isA(obj, "ImageLabel") or isA(obj, "ImageButton")) then
 return
 end
 
 local img = tostring(obj.Image)
-local name = string.lower(obj.Name)
+local name = string.lower(tostring(obj.Name))
 
-if img:find(OLD_ICON_ID) then
+if string.find(img, OLD_ICON_ID) then
     obj.Image = NEW_ICON
     return
 end
 
-if name:find("logo") or name:find("icon") or name:find("brand") or name:find("open") then
+if string.find(name, "logo") or string.find(name, "icon") or string.find(name, "brand") or string.find(name, "open") then
     obj.Image = NEW_ICON
     return
-end
-
-local x = obj.Size.X.Offset
-local y = obj.Size.Y.Offset
-
-if x >= 25 and x <= 95 and y >= 25 and y <= 95 then
-    obj.Image = NEW_ICON
 end
 
 end
@@ -138,7 +168,7 @@ return
 end
 
 pcall(function()
-    if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
+    if isA(obj, "TextLabel") or isA(obj, "TextButton") or isA(obj, "TextBox") then
         obj.Text = fixText(obj.Text)
     end
 
@@ -149,11 +179,9 @@ end)
 end
 
 local function fixContainer(container)
-pcall(function()
-for _, obj in ipairs(container()) do
+for _, obj in ipairs(getDescendants(container)) do
 fixObject(obj)
 end
-end)
 end
 
 local function fixAll()
@@ -161,12 +189,12 @@ fixContainer(playerGui)
 fixContainer(CoreGui)
 end
 
-playerGui.DescendantAdded(function(obj)
+playerGui.DescendantAdded.Connect(playerGui.DescendantAdded, function(obj)
 task.wait()
 fixObject(obj)
 end)
 
-CoreGui.DescendantAdded(function(obj)
+CoreGui.DescendantAdded.Connect(CoreGui.DescendantAdded, function(obj)
 task.wait()
 fixObject(obj)
 end)
@@ -179,7 +207,7 @@ text = tostring(text)
 
     local lowerText = string.lower(text)
 
-    if lowerText:find("discord") or lowerText:find("twvz") or lowerText:find("invite") then
+    if string.find(lowerText, "discord") or string.find(lowerText, "twvz") or string.find(lowerText, "invite") then
         text = NEW_DISCORD
     end
 
@@ -199,7 +227,7 @@ end
 print("[JR] Carregando Anime Astral original...")
 
 local ok, err = pcall(function()
-local source = game(ORIGINAL_URL)
+local source = game.HttpGet(game, ORIGINAL_URL)
 
 local fn, compileErr = loadstring(source)
 
