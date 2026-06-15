@@ -18,7 +18,6 @@ if typeof(text) ~= "string" then
 return text
 end
 
-```
 text = text:gsub("TWVZ", NEW_NAME)
 text = text:gsub("twvz", "jr")
 text = text:gsub("https://discord.gg/Wk9bHxEuef", NEW_DISCORD)
@@ -26,7 +25,6 @@ text = text:gsub("https://discord.gg/jND7mB8T", NEW_DISCORD)
 text = text:gsub("https://twvz.click", NEW_DISCORD)
 
 return text
-```
 
 end
 
@@ -36,7 +34,6 @@ if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
 obj.Text = fixText(obj.Text)
 end
 
-```
     if obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
         local img = tostring(obj.Image)
 
@@ -45,7 +42,6 @@ end
         end
     end
 end)
-```
 
 end
 
@@ -66,7 +62,6 @@ if oldSetClipboard then
 local function newSetClipboard(text)
 text = tostring(text)
 
-```
     if text:find("discord.gg") then
         text = NEW_DISCORD
     end
@@ -81,7 +76,6 @@ pcall(function()
         setclipboard = newSetClipboard
     end
 end)
-```
 
 end
 
