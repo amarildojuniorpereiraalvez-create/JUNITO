@@ -2,114 +2,100 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
+local BASE_URL = "https://raw.githubusercontent.com/amarildojuniorpereiraalvez-create/JUNITO/refs/heads/main"
+
+local GAMES = {
+    [9186719164]  = "sailorpiece.lua",
+    [6718454990]  = "animeghost.lua",
+    [10032271327] = "worldfighters.lua",
+    [9792947201] = "slimerng.lua",
+    [7395930870] = "selllemons.lua",
+    [9797806474] = "animeastral.lua",
+}
+
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
-local HUB_NAME = "Junioor"
+local gameId = game.GameId
+local scriptFile = GAMES[gameId]
 
-print("[" .. HUB_NAME .. "] Loader carregado com sucesso!")
-print("[" .. HUB_NAME .. "] GameId:", game.GameId)
-print("[" .. HUB_NAME .. "] PlaceId:", game.PlaceId)
+local DISCORD_URL = "https://discord.gg/Wk9bHxEuef"
 
-local oldGui = player:WaitForChild("PlayerGui"):FindFirstChild("Junioor_Hub")
-if oldGui then
-    oldGui:Destroy()
-end
+if not scriptFile then
+    warn("[Junioor] Unsupported game (GameId: " .. tostring(gameId) .. ")")
 
-local gui = Instance.new("ScreenGui")
-gui.Name = "Junioor_Hub"
-gui.ResetOnSpawn = false
-gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-gui.IgnoreGuiInset = true
-gui.Parent = player:WaitForChild("PlayerGui")
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "Junioor_LoaderBlock"
+    gui.ResetOnSpawn = false
+    gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    gui.IgnoreGuiInset = true
+    gui.Parent = player:WaitForChild("PlayerGui")
 
-local main = Instance.new("Frame")
-main.Size = UDim2.fromOffset(450, 300)
-main.Position = UDim2.fromScale(0.5, 0.5)
-main.AnchorPoint = Vector2.new(0.5, 0.5)
-main.BackgroundColor3 = Color3.fromRGB(22, 22, 32)
-main.BorderSizePixel = 0
-main.Parent = gui
-
-local mainCorner = Instance.new("UICorner")
-mainCorner.CornerRadius = UDim.new(0, 14)
-mainCorner.Parent = main
-
-local stroke = Instance.new("UIStroke")
-stroke.Color = Color3.fromRGB(65, 65, 90)
-stroke.Thickness = 1
-stroke.Parent = main
-
-local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, -70, 0, 45)
-title.Position = UDim2.fromOffset(20, 12)
-title.BackgroundTransparency = 1
-title.Text = "Junioor Hub"
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.TextSize = 26
-title.Font = Enum.Font.GothamBold
-title.TextXAlignment = Enum.TextXAlignment.Left
-title.Parent = main
-
-local close = Instance.new("TextButton")
-close.Size = UDim2.fromOffset(36, 36)
-close.Position = UDim2.new(1, -48, 0, 10)
-close.BackgroundTransparency = 1
-close.Text = "X"
-close.TextColor3 = Color3.fromRGB(255, 80, 80)
-close.TextSize = 20
-close.Font = Enum.Font.GothamBold
-close.Parent = main
-
-close.MouseButton1Click:Connect(function()
-    gui:Destroy()
-end)
-
-local info = Instance.new("TextLabel")
-info.Size = UDim2.new(1, -40, 0, 55)
-info.Position = UDim2.fromOffset(20, 60)
-info.BackgroundTransparency = 1
-info.Text = "Carregado com sucesso!\nGameId: " .. tostring(game.GameId) .. " | PlaceId: " .. tostring(game.PlaceId)
-info.TextColor3 = Color3.fromRGB(180, 180, 190)
-info.TextSize = 15
-info.Font = Enum.Font.Gotham
-info.TextXAlignment = Enum.TextXAlignment.Left
-info.TextWrapped = true
-info.Parent = main
-
-local function criarBotao(texto, y)
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, -40, 0, 42)
-    btn.Position = UDim2.fromOffset(20, y)
-    btn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
-    btn.BorderSizePixel = 0
-    btn.Text = texto
-    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.TextSize = 16
-    btn.Font = Enum.Font.GothamBold
-    btn.Parent = main
+    local container = Instance.new("Frame")
+    container.Size = UDim2.fromOffset(420, 220)
+    container.Position = UDim2.fromScale(0.5, 0.5)
+    container.AnchorPoint = Vector2.new(0.5, 0.5)
+    container.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+    container.BorderSizePixel = 0
+    container.Parent = gui
 
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 9)
-    corner.Parent = btn
+    corner.CornerRadius = UDim.new(0, 12)
+    corner.Parent = container
 
-    return btn
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.fromRGB(60, 60, 80)
+    stroke.Thickness = 1
+    stroke.Parent = container
+
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, -76, 0, 40)
+    title.Position = UDim2.fromOffset(20, 22)
+    title.BackgroundTransparency = 1
+    title.Text = "Game Not Supported"
+    title.TextColor3 = Color3.fromRGB(255, 80, 80)
+    title.TextSize = 24
+    title.Font = Enum.Font.GothamBold
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.Parent = container
+
+    local body = Instance.new("TextLabel")
+    body.Size = UDim2.new(1, -40, 0, 60)
+    body.Position = UDim2.fromOffset(20, 72)
+    body.BackgroundTransparency = 1
+    body.Text = "Junioor ainda não tem script para este jogo."
+    body.TextColor3 = Color3.fromRGB(180, 180, 190)
+    body.TextSize = 15
+    body.Font = Enum.Font.Gotham
+    body.TextXAlignment = Enum.TextXAlignment.Left
+    body.TextWrapped = true
+    body.Parent = container
+
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Size = UDim2.fromOffset(32, 32)
+    closeBtn.Position = UDim2.new(1, -42, 0, 10)
+    closeBtn.BackgroundTransparency = 1
+    closeBtn.Text = "X"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 80, 80)
+    closeBtn.TextSize = 18
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.Parent = container
+
+    closeBtn.MouseButton1Click:Connect(function()
+        gui:Destroy()
+    end)
+
+    return
 end
 
-local botao1 = criarBotao("Função 1", 130)
-local botao2 = criarBotao("Função 2", 180)
-local botao3 = criarBotao("Fechar Hub", 230)
+local url = BASE_URL .. "/" .. scriptFile
 
-botao1.MouseButton1Click:Connect(function()
-    botao1.Text = "Função 1 ativada!"
-    print("[Junioor] Função 1 ativada")
+print("[Junioor] Carregando:", url)
+
+local ok, err = pcall(function()
+    loadstring(game:HttpGet(url))()
 end)
 
-botao2.MouseButton1Click:Connect(function()
-    botao2.Text = "Função 2 ativada!"
-    print("[Junioor] Função 2 ativada")
-end)
-
-botao3.MouseButton1Click:Connect(function()
-    gui:Destroy()
-end)
+if not ok then
+    warn("[Junioor] Failed to load " .. scriptFile .. ": " .. tostring(err))
+end
