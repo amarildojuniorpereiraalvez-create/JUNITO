@@ -19,8 +19,6 @@ if oldGui then
 oldGui:Destroy()
 end
 
-_G.JR_ANIME_ASTRAL_LOADED = true
-
 local gui = Instance.new("ScreenGui")
 gui.Name = "Junioor_Astral_Hub"
 gui.ResetOnSpawn = false
@@ -162,7 +160,6 @@ close.Parent = topBar
 
 close.MouseButton1Click:Connect(function()
 gui:Destroy()
-_G.JR_ANIME_ASTRAL_LOADED = false
 end)
 
 minimize.MouseButton1Click:Connect(function()
