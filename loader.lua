@@ -1,6 +1,4 @@
-if not game() then
-game.Loaded()
-end
+print("[JR] Loader iniciou")
 
 local ORIGINAL_URL = "https://raw.githubusercontent.com/ZhangJunZ84/twvzyyds/refs/heads/main/animeastral.lua"
 
@@ -16,25 +14,27 @@ local NEW_ICON = "rbxassetid://114656274027180"
 
 local OLD_ICON_ID = "72031513619068"
 
-local before = {}
+local beforeGuis = {}
 
 local function markBefore(container)
+pcall(function()
 for _, child in ipairs(container()) do
 if child("ScreenGui") then
-before[child] = true
+beforeGuis[child] = true
 end
 end
+end)
 end
 
 markBefore(playerGui)
 markBefore(CoreGui)
 
-local function isNewGuiObject(obj)
+local function isFromNewMenu(obj)
 local current = obj
 
 while current do
     if current:IsA("ScreenGui") then
-        return before[current] ~= true
+        return beforeGuis[current] ~= true
     end
 
     if current == playerGui or current == CoreGui then
@@ -57,9 +57,15 @@ text = text:gsub("TWVZ", NEW_NAME)
 text = text:gsub("twvz", "jr")
 text = text:gsub("T W V Z", NEW_NAME)
 
-text = text:gsub("https://discord.gg/Wk9bHxEuef", NEW_DISCORD)
-text = text:gsub("https://discord.gg/jND7mB8T", NEW_DISCORD)
-text = text:gsub("https://twvz.click", NEW_DISCORD)
+text = text:gsub("https://discord%.gg/[%w%-%_]+", NEW_DISCORD)
+text = text:gsub("http://discord%.gg/[%w%-%_]+", NEW_DISCORD)
+text = text:gsub("discord%.gg/[%w%-%_]+", "discord.gg/G2gMadWRRx")
+
+text = text:gsub("https://discord%.com/invite/[%w%-%_]+", NEW_DISCORD)
+text = text:gsub("http://discord%.com/invite/[%w%-%_]+", NEW_DISCORD)
+
+text = text:gsub("https://twvz%.click", NEW_DISCORD)
+text = text:gsub("http://twvz%.click", NEW_DISCORD)
 
 return text
 
@@ -76,9 +82,9 @@ if fixedButtons[obj] then
     return
 end
 
-local text = string.lower(tostring(obj.Text))
+local lowerText = string.lower(tostring(obj.Text))
 
-if text:find("discord") or text:find("server") or text:find("invite") then
+if lowerText:find("discord") or lowerText:find("server") or lowerText:find("invite") then
     fixedButtons[obj] = true
 
     obj.MouseButton1Click:Connect(function()
@@ -86,9 +92,14 @@ if text:find("discord") or text:find("server") or text:find("invite") then
             setclipboard(NEW_DISCORD)
         end
 
+        local oldText = obj.Text
         obj.Text = "Discord copiado!"
+
         task.wait(1.5)
-        obj.Text = fixText(obj.Text)
+
+        if obj and obj.Parent then
+            obj.Text = fixText(oldText)
+        end
     end)
 end
 
@@ -115,14 +126,14 @@ end
 local x = obj.Size.X.Offset
 local y = obj.Size.Y.Offset
 
-if x >= 25 and x <= 90 and y >= 25 and y <= 90 then
+if x >= 25 and x <= 95 and y >= 25 and y <= 95 then
     obj.Image = NEW_ICON
 end
 
 end
 
 local function fixObject(obj)
-if not isNewGuiObject(obj) then
+if not isFromNewMenu(obj) then
 return
 end
 
@@ -138,9 +149,11 @@ end)
 end
 
 local function fixContainer(container)
+pcall(function()
 for _, obj in ipairs(container()) do
 fixObject(obj)
 end
+end)
 end
 
 local function fixAll()
@@ -161,10 +174,12 @@ end)
 local originalSetClipboard = setclipboard
 
 if originalSetClipboard then
-local function newSetClipboard(text)
+local function forcedSetClipboard(text)
 text = tostring(text)
 
-    if text:lower():find("discord") or text:lower():find("twvz") or text:lower():find("invite") then
+    local lowerText = string.lower(text)
+
+    if lowerText:find("discord") or lowerText:find("twvz") or lowerText:find("invite") then
         text = NEW_DISCORD
     end
 
@@ -173,18 +188,27 @@ end
 
 pcall(function()
     if getgenv then
-        getgenv().setclipboard = newSetClipboard
+        getgenv().setclipboard = forcedSetClipboard
     else
-        setclipboard = newSetClipboard
+        setclipboard = forcedSetClipboard
     end
 end)
 
 end
 
-print("[JR] Carregando Anime Astral original sem alterar codigo interno...")
+print("[JR] Carregando Anime Astral original...")
 
 local ok, err = pcall(function()
-loadstring(game(ORIGINAL_URL))()
+local source = game(ORIGINAL_URL)
+
+local fn, compileErr = loadstring(source)
+
+if not fn then
+    error(compileErr)
+end
+
+fn()
+
 end)
 
 if not ok then
@@ -192,9 +216,11 @@ warn("[JR] Erro ao carregar Anime Astral original: " .. tostring(err))
 return
 end
 
-for i = 1, 200 do
+task.spawn(function()
+for i = 1, 300 do
 fixAll()
 task.wait(0.1)
 end
+end)
 
-print("[JR] Anime Astral carregado com funcoes originais, nome, icon e Discord alterados.")
+print("[JR] Anime Astral carregado. Aplicando nome, icon e Discord.")
