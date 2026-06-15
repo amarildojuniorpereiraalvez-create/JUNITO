@@ -3,17 +3,19 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
+-- Seu GitHub
 local BASE_URL = "https://raw.githubusercontent.com/amarildojuniorpereiraalvez-create/JUNITO/refs/heads/main"
 
+-- Só Anime Astral
 local GAMES = {
     [9797806474] = "animeastral.lua",
 }
 
-local gameId = game.GameId
-local scriptFile = GAMES[gameId]
-
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
+
+local gameId = game.GameId
+local scriptFile = GAMES[gameId]
 
 local HUB_NAME = "JR"
 local FULL_NAME = "Junioor"
