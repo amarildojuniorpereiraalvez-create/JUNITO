@@ -1,5 +1,5 @@
 if not game:IsLoaded() then
-game.Loaded:Wait()
+    game.Loaded:Wait()
 end
 
 local Players = game:GetService("Players")
@@ -16,7 +16,7 @@ local VERSION = "v0.0.9"
 
 local oldGui = playerGui:FindFirstChild("Junioor_Astral_Hub")
 if oldGui then
-oldGui:Destroy()
+    oldGui:Destroy()
 end
 
 local gui = Instance.new("ScreenGui")
@@ -159,15 +159,15 @@ close.Font = Enum.Font.GothamBold
 close.Parent = topBar
 
 close.MouseButton1Click:Connect(function()
-gui:Destroy()
+    gui:Destroy()
 end)
 
 minimize.MouseButton1Click:Connect(function()
-main.Visible = false
+    main.Visible = false
 end)
 
 floatingIcon.MouseButton1Click:Connect(function()
-main.Visible = not main.Visible
+    main.Visible = not main.Visible
 end)
 
 local sidebar = Instance.new("Frame")
@@ -179,26 +179,23 @@ sidebar.BorderSizePixel = 0
 sidebar.Parent = main
 
 local function sideButton(text, y)
-local btn = Instance.new("TextButton")
-btn.Size = UDim2.fromOffset(130, 38)
-btn.Position = UDim2.fromOffset(10, y)
-btn.BackgroundColor3 = Color3.fromRGB(35, 45, 60)
-btn.BackgroundTransparency = 0.15
-btn.BorderSizePixel = 0
-btn.Text = text
-btn.TextColor3 = Color3.fromRGB(235, 235, 240)
-btn.TextSize = 14
-btn.Font = Enum.Font.Gotham
-btn.Parent = sidebar
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.fromOffset(130, 38)
+    btn.Position = UDim2.fromOffset(10, y)
+    btn.BackgroundColor3 = Color3.fromRGB(35, 45, 60)
+    btn.BackgroundTransparency = 0.15
+    btn.BorderSizePixel = 0
+    btn.Text = text
+    btn.TextColor3 = Color3.fromRGB(235, 235, 240)
+    btn.TextSize = 14
+    btn.Font = Enum.Font.Gotham
+    btn.Parent = sidebar
 
-```
-local c = Instance.new("UICorner")
-c.CornerRadius = UDim.new(0, 8)
-c.Parent = btn
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, 8)
+    c.Parent = btn
 
-return btn
-```
-
+    return btn
 end
 
 sideButton("Updates", 20)
@@ -247,18 +244,15 @@ dc.CornerRadius = UDim.new(0, 8)
 dc.Parent = discordBtn
 
 discordBtn.MouseButton1Click:Connect(function()
-if setclipboard then
-setclipboard(DISCORD_URL)
-discordBtn.Text = "Discord copiado!"
-else
-discordBtn.Text = DISCORD_URL
-end
+    if setclipboard then
+        setclipboard(DISCORD_URL)
+        discordBtn.Text = "Discord copiado!"
+    else
+        discordBtn.Text = DISCORD_URL
+    end
 
-```
-task.wait(2)
-discordBtn.Text = "Discord " .. FULL_NAME
-```
-
+    task.wait(2)
+    discordBtn.Text = "Discord " .. FULL_NAME
 end)
 
 local info = Instance.new("TextLabel")
@@ -284,33 +278,30 @@ local dragStart
 local startPos
 
 topBar.InputBegan:Connect(function(input)
-if input.UserInputType == Enum.UserInputType.MouseButton1 then
-dragging = true
-dragStart = input.Position
-startPos = main.Position
-end
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = main.Position
+    end
 end)
 
 topBar.InputEnded:Connect(function(input)
-if input.UserInputType == Enum.UserInputType.MouseButton1 then
-dragging = false
-end
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false
+    end
 end)
 
 UserInputService.InputChanged:Connect(function(input)
-if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-local delta = input.Position - dragStart
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - dragStart
 
-```
-    main.Position = UDim2.new(
-        startPos.X.Scale,
-        startPos.X.Offset + delta.X,
-        startPos.Y.Scale,
-        startPos.Y.Offset + delta.Y
-    )
-end
-```
-
+        main.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
 end)
 
 print("[JR] Anime Astral visual loaded.")
