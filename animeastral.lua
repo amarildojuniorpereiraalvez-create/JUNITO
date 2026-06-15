@@ -1,13 +1,6 @@
-```lua
 if not game:IsLoaded() then
-    game.Loaded:Wait()
+game.Loaded:Wait()
 end
-
-if _G.JR_ANIME_ASTRAL_LOADED then
-    return
-end
-
-_G.JR_ANIME_ASTRAL_LOADED = true
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
@@ -19,11 +12,14 @@ local HUB_NAME = "JR"
 local FULL_NAME = "Junioor"
 local DISCORD_URL = "https://discord.gg/G2gMadWRRx"
 local ICON_IMAGE = "rbxassetid://114656274027180"
+local VERSION = "v0.0.9"
 
 local oldGui = playerGui:FindFirstChild("Junioor_Astral_Hub")
 if oldGui then
-    oldGui:Destroy()
+oldGui:Destroy()
 end
+
+_G.JR_ANIME_ASTRAL_LOADED = true
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "Junioor_Astral_Hub"
@@ -105,7 +101,7 @@ local version = Instance.new("TextLabel")
 version.Size = UDim2.fromOffset(75, 26)
 version.Position = UDim2.fromOffset(175, 10)
 version.BackgroundColor3 = Color3.fromRGB(130, 235, 155)
-version.Text = "v0.0.9"
+version.Text = VERSION
 version.TextColor3 = Color3.fromRGB(15, 20, 25)
 version.TextSize = 13
 version.Font = Enum.Font.GothamBold
@@ -165,16 +161,16 @@ close.Font = Enum.Font.GothamBold
 close.Parent = topBar
 
 close.MouseButton1Click:Connect(function()
-    gui:Destroy()
-    _G.JR_ANIME_ASTRAL_LOADED = false
+gui:Destroy()
+_G.JR_ANIME_ASTRAL_LOADED = false
 end)
 
 minimize.MouseButton1Click:Connect(function()
-    main.Visible = false
+main.Visible = false
 end)
 
 floatingIcon.MouseButton1Click:Connect(function()
-    main.Visible = not main.Visible
+main.Visible = not main.Visible
 end)
 
 local sidebar = Instance.new("Frame")
@@ -186,23 +182,26 @@ sidebar.BorderSizePixel = 0
 sidebar.Parent = main
 
 local function sideButton(text, y)
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.fromOffset(130, 38)
-    btn.Position = UDim2.fromOffset(10, y)
-    btn.BackgroundColor3 = Color3.fromRGB(35, 45, 60)
-    btn.BackgroundTransparency = 0.15
-    btn.BorderSizePixel = 0
-    btn.Text = text
-    btn.TextColor3 = Color3.fromRGB(235, 235, 240)
-    btn.TextSize = 14
-    btn.Font = Enum.Font.Gotham
-    btn.Parent = sidebar
+local btn = Instance.new("TextButton")
+btn.Size = UDim2.fromOffset(130, 38)
+btn.Position = UDim2.fromOffset(10, y)
+btn.BackgroundColor3 = Color3.fromRGB(35, 45, 60)
+btn.BackgroundTransparency = 0.15
+btn.BorderSizePixel = 0
+btn.Text = text
+btn.TextColor3 = Color3.fromRGB(235, 235, 240)
+btn.TextSize = 14
+btn.Font = Enum.Font.Gotham
+btn.Parent = sidebar
 
-    local c = Instance.new("UICorner")
-    c.CornerRadius = UDim.new(0, 8)
-    c.Parent = btn
+```
+local c = Instance.new("UICorner")
+c.CornerRadius = UDim.new(0, 8)
+c.Parent = btn
 
-    return btn
+return btn
+```
+
 end
 
 sideButton("Updates", 20)
@@ -222,7 +221,7 @@ update1.Size = UDim2.new(1, -10, 0, 95)
 update1.Position = UDim2.fromOffset(0, 0)
 update1.BackgroundColor3 = Color3.fromRGB(45, 45, 55)
 update1.BackgroundTransparency = 0.1
-update1.Text = "Version v0.0.9\n[Main] Branding changed to " .. FULL_NAME .. "\n[Main] Discord updated\n[Main] JR icon configured"
+update1.Text = "Version " .. VERSION .. "\n[Main] Branding changed to " .. FULL_NAME .. "\n[Main] Discord updated\n[Main] JR icon configured"
 update1.TextColor3 = Color3.fromRGB(220, 220, 230)
 update1.TextSize = 14
 update1.Font = Enum.Font.Gotham
@@ -251,15 +250,18 @@ dc.CornerRadius = UDim.new(0, 8)
 dc.Parent = discordBtn
 
 discordBtn.MouseButton1Click:Connect(function()
-    if setclipboard then
-        setclipboard(DISCORD_URL)
-        discordBtn.Text = "Discord copiado!"
-    else
-        discordBtn.Text = DISCORD_URL
-    end
+if setclipboard then
+setclipboard(DISCORD_URL)
+discordBtn.Text = "Discord copiado!"
+else
+discordBtn.Text = DISCORD_URL
+end
 
-    task.wait(2)
-    discordBtn.Text = "Discord " .. FULL_NAME
+```
+task.wait(2)
+discordBtn.Text = "Discord " .. FULL_NAME
+```
+
 end)
 
 local info = Instance.new("TextLabel")
@@ -285,31 +287,33 @@ local dragStart
 local startPos
 
 topBar.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true
-        dragStart = input.Position
-        startPos = main.Position
-    end
+if input.UserInputType == Enum.UserInputType.MouseButton1 then
+dragging = true
+dragStart = input.Position
+startPos = main.Position
+end
 end)
 
 topBar.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = false
-    end
+if input.UserInputType == Enum.UserInputType.MouseButton1 then
+dragging = false
+end
 end)
 
 UserInputService.InputChanged:Connect(function(input)
-    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-        local delta = input.Position - dragStart
+if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+local delta = input.Position - dragStart
 
-        main.Position = UDim2.new(
-            startPos.X.Scale,
-            startPos.X.Offset + delta.X,
-            startPos.Y.Scale,
-            startPos.Y.Offset + delta.Y
-        )
-    end
+```
+    main.Position = UDim2.new(
+        startPos.X.Scale,
+        startPos.X.Offset + delta.X,
+        startPos.Y.Scale,
+        startPos.Y.Offset + delta.Y
+    )
+end
+```
+
 end)
 
 print("[JR] Anime Astral visual loaded.")
-```
