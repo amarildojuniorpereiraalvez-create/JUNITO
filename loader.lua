@@ -9,10 +9,8 @@ local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
 local NEW_NAME = "JR"
-local NEW_FULL_NAME = "Junioor"
 local NEW_DISCORD = "https://discord.gg/G2gMadWRRx"
 local NEW_ICON = "rbxassetid://114656274027180"
-
 local OLD_ICON_ID = "72031513619068"
 
 local function fixText(text)
@@ -23,7 +21,6 @@ end
 ```
 text = text:gsub("TWVZ", NEW_NAME)
 text = text:gsub("twvz", "jr")
-text = text:gsub("TWVZ Hub", NEW_FULL_NAME)
 text = text:gsub("https://discord.gg/Wk9bHxEuef", NEW_DISCORD)
 text = text:gsub("https://discord.gg/jND7mB8T", NEW_DISCORD)
 text = text:gsub("https://twvz.click", NEW_DISCORD)
@@ -63,9 +60,9 @@ task.wait()
 fixObject(obj)
 end)
 
-local originalSetClipboard = setclipboard
+local oldSetClipboard = setclipboard
 
-if originalSetClipboard then
+if oldSetClipboard then
 local function newSetClipboard(text)
 text = tostring(text)
 
@@ -74,7 +71,7 @@ text = tostring(text)
         text = NEW_DISCORD
     end
 
-    return originalSetClipboard(text)
+    return oldSetClipboard(text)
 end
 
 pcall(function()
@@ -99,9 +96,9 @@ warn("[JR] Erro ao carregar Anime Astral original: " .. tostring(err))
 return
 end
 
-for i = 1, 120 do
+for i = 1, 100 do
 fixAll()
 task.wait(0.15)
 end
 
-print("[JR] Anime Astral carregado com funcoes originais, nome, icon e Discord alterados.")
+print("[JR] Anime Astral carregado com funções originais.")
