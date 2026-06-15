@@ -5,13 +5,15 @@ end
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
-print("[JUNITO] Loader carregado com sucesso!")
-print("[JUNITO] GameId:", game.GameId)
-print("[JUNITO] PlaceId:", game.PlaceId)
+print("[JUNIOOR] Loader carregado com sucesso!")
+print("[JUNIOOR] GameId:", game.GameId)
+print("[JUNIOOR] PlaceId:", game.PlaceId)
 
 local gui = Instance.new("ScreenGui")
-gui.Name = "JUNITO_Loader"
+gui.Name = "Junioor_Loader"
 gui.ResetOnSpawn = false
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+gui.IgnoreGuiInset = true
 gui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
@@ -27,10 +29,10 @@ corner.CornerRadius = UDim.new(0, 12)
 corner.Parent = frame
 
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, -30, 0, 40)
+title.Size = UDim2.new(1, -50, 0, 40)
 title.Position = UDim2.fromOffset(15, 15)
 title.BackgroundTransparency = 1
-title.Text = "JUNITO Loader"
+title.Text = "Junioor Loader"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.TextSize = 24
 title.Font = Enum.Font.GothamBold
