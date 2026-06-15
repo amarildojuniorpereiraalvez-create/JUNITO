@@ -1,16 +1,12 @@
-print("[JR] Loader iniciou")
-
-if not game.IsLoaded(game) then
-game.Loaded.Wait(game.Loaded)
+if not game() then
+game.Loaded()
 end
 
 local ORIGINAL_URL = "https://raw.githubusercontent.com/ZhangJunZ84/twvzyyds/refs/heads/main/animeastral.lua"
 
-local Players = game.GetService(game, "Players")
-local CoreGui = game.GetService(game, "CoreGui")
-
+local Players = game("Players")
 local player = Players.LocalPlayer
-local playerGui = player.WaitForChild(player, "PlayerGui")
+local playerGui = player("PlayerGui")
 
 local NEW_NAME = "JR"
 local NEW_DISCORD = "https://discord.gg/G2gMadWRRx"
@@ -18,70 +14,26 @@ local NEW_ICON = "rbxassetid://114656274027180"
 
 local OLD_ICON_ID = "72031513619068"
 
-local beforeGuis = {}
+local originalSetClipboard = setclipboard
 
-local function getChildren(obj)
-local ok, result = pcall(function()
-return obj.GetChildren(obj)
-end)
+if originalSetClipboard then
+local function fixedClipboard(text)
+text = tostring(text)
 
-if ok and result then
-    return result
-end
-
-return {}
-
-end
-
-local function getDescendants(obj)
-local ok, result = pcall(function()
-return obj.GetDescendants(obj)
-end)
-
-if ok and result then
-    return result
-end
-
-return {}
-
-end
-
-local function isA(obj, className)
-local ok, result = pcall(function()
-return obj.IsA(obj, className)
-end)
-
-return ok and result
-
-end
-
-local function markBefore(container)
-for _, child in ipairs(getChildren(container)) do
-if isA(child, "ScreenGui") then
-beforeGuis[child] = true
-end
-end
-end
-
-markBefore(playerGui)
-markBefore(CoreGui)
-
-local function isFromNewMenu(obj)
-local current = obj
-
-while current do
-    if isA(current, "ScreenGui") then
-        return beforeGuis[current] ~= true
+    if text:lower():find("discord") or text:lower():find("twvz") or text:lower():find("invite") then
+        text = NEW_DISCORD
     end
 
-    if current == playerGui or current == CoreGui then
-        break
-    end
-
-    current = current.Parent
+    return originalSetClipboard(text)
 end
 
-return false
+pcall(function()
+    if getgenv then
+        getgenv().setclipboard = fixedClipboard
+    else
+        setclipboard = fixedClipboard
+    end
+end)
 
 end
 
@@ -90,28 +42,54 @@ if typeof(text) ~= "string" then
 return text
 end
 
-text = string.gsub(text, "TWVZ", NEW_NAME)
-text = string.gsub(text, "twvz", "jr")
-text = string.gsub(text, "T W V Z", NEW_NAME)
+text = text:gsub("TWVZ", NEW_NAME)
+text = text:gsub("twvz", "jr")
+text = text:gsub("T W V Z", NEW_NAME)
 
-text = string.gsub(text, "https://discord%.gg/[%w%-%_]+", NEW_DISCORD)
-text = string.gsub(text, "http://discord%.gg/[%w%-%_]+", NEW_DISCORD)
-text = string.gsub(text, "discord%.gg/[%w%-%_]+", "discord.gg/G2gMadWRRx")
+text = text:gsub("https://discord%.gg/[%w%-%_]+", NEW_DISCORD)
+text = text:gsub("http://discord%.gg/[%w%-%_]+", NEW_DISCORD)
+text = text:gsub("discord%.gg/[%w%-%_]+", "discord.gg/G2gMadWRRx")
 
-text = string.gsub(text, "https://discord%.com/invite/[%w%-%_]+", NEW_DISCORD)
-text = string.gsub(text, "http://discord%.com/invite/[%w%-%_]+", NEW_DISCORD)
+text = text:gsub("https://discord%.com/invite/[%w%-%_]+", NEW_DISCORD)
+text = text:gsub("http://discord%.com/invite/[%w%-%_]+", NEW_DISCORD)
 
-text = string.gsub(text, "https://twvz%.click", NEW_DISCORD)
-text = string.gsub(text, "http://twvz%.click", NEW_DISCORD)
+text = text:gsub("https://twvz%.click", NEW_DISCORD)
+text = text:gsub("http://twvz%.click", NEW_DISCORD)
 
 return text
+
+end
+
+local function isAnimeAstralGui(screenGui)
+if not screenGui("ScreenGui") then
+return false
+end
+
+local foundAnime = false
+local foundMenu = false
+
+for _, obj in ipairs(screenGui:GetDescendants()) do
+    if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
+        local txt = tostring(obj.Text)
+
+        if txt:find("Anime Astral") then
+            foundAnime = true
+        end
+
+        if txt == "Updates" or txt == "Main" or txt == "Gamemodes" or txt == "Misc" or txt == "Settings" then
+            foundMenu = true
+        end
+    end
+end
+
+return foundAnime or foundMenu
 
 end
 
 local fixedButtons = {}
 
 local function fixDiscordButton(obj)
-if not isA(obj, "TextButton") then
+if not obj("TextButton") then
 return
 end
 
@@ -119,12 +97,12 @@ if fixedButtons[obj] then
     return
 end
 
-local lowerText = string.lower(tostring(obj.Text))
+local txt = string.lower(tostring(obj.Text))
 
-if string.find(lowerText, "discord") or string.find(lowerText, "server") or string.find(lowerText, "invite") then
+if txt:find("discord") or txt:find("server") or txt:find("invite") then
     fixedButtons[obj] = true
 
-    obj.MouseButton1Click.Connect(obj.MouseButton1Click, function()
+    obj.MouseButton1Click:Connect(function()
         if setclipboard then
             setclipboard(NEW_DISCORD)
         end
@@ -143,19 +121,19 @@ end
 end
 
 local function fixImage(obj)
-if not (isA(obj, "ImageLabel") or isA(obj, "ImageButton")) then
+if not (obj("ImageLabel") or obj("ImageButton")) then
 return
 end
 
 local img = tostring(obj.Image)
 local name = string.lower(tostring(obj.Name))
 
-if string.find(img, OLD_ICON_ID) then
+if img:find(OLD_ICON_ID) then
     obj.Image = NEW_ICON
     return
 end
 
-if string.find(name, "logo") or string.find(name, "icon") or string.find(name, "brand") or string.find(name, "open") then
+if name:find("logo") or name:find("icon") or name:find("brand") then
     obj.Image = NEW_ICON
     return
 end
@@ -163,14 +141,10 @@ end
 end
 
 local function fixObject(obj)
-if not isFromNewMenu(obj) then
-return
-end
-
 pcall(function()
-    if isA(obj, "TextLabel") or isA(obj, "TextButton") or isA(obj, "TextBox") then
-        obj.Text = fixText(obj.Text)
-    end
+if obj("TextLabel") or obj("TextButton") or obj("TextBox") then
+obj.Text = fixText(obj.Text)
+end
 
     fixImage(obj)
     fixDiscordButton(obj)
@@ -178,65 +152,43 @@ end)
 
 end
 
-local function fixContainer(container)
-for _, obj in ipairs(getDescendants(container)) do
-fixObject(obj)
-end
-end
-
-local function fixAll()
-fixContainer(playerGui)
-fixContainer(CoreGui)
+local function patchGui(screenGui)
+if not isAnimeAstralGui(screenGui) then
+return
 end
 
-playerGui.DescendantAdded.Connect(playerGui.DescendantAdded, function(obj)
-task.wait()
-fixObject(obj)
-end)
-
-CoreGui.DescendantAdded.Connect(CoreGui.DescendantAdded, function(obj)
-task.wait()
-fixObject(obj)
-end)
-
-local originalSetClipboard = setclipboard
-
-if originalSetClipboard then
-local function forcedSetClipboard(text)
-text = tostring(text)
-
-    local lowerText = string.lower(text)
-
-    if string.find(lowerText, "discord") or string.find(lowerText, "twvz") or string.find(lowerText, "invite") then
-        text = NEW_DISCORD
-    end
-
-    return originalSetClipboard(text)
+for _, obj in ipairs(screenGui:GetDescendants()) do
+    fixObject(obj)
 end
 
-pcall(function()
-    if getgenv then
-        getgenv().setclipboard = forcedSetClipboard
-    else
-        setclipboard = forcedSetClipboard
-    end
+screenGui.DescendantAdded:Connect(function(obj)
+    task.wait()
+    fixObject(obj)
 end)
 
 end
+
+local function patchAllAnimeGuis()
+for _, child in ipairs(playerGui()) do
+if child("ScreenGui") then
+patchGui(child)
+end
+end
+end
+
+playerGui.ChildAdded(function(child)
+task.wait(0.3)
+
+if child:IsA("ScreenGui") then
+    patchGui(child)
+end
+
+end)
 
 print("[JR] Carregando Anime Astral original...")
 
 local ok, err = pcall(function()
-local source = game.HttpGet(game, ORIGINAL_URL)
-
-local fn, compileErr = loadstring(source)
-
-if not fn then
-    error(compileErr)
-end
-
-fn()
-
+loadstring(game(ORIGINAL_URL))()
 end)
 
 if not ok then
@@ -244,11 +196,13 @@ warn("[JR] Erro ao carregar Anime Astral original: " .. tostring(err))
 return
 end
 
-task.spawn(function()
-for i = 1, 300 do
-fixAll()
-task.wait(0.1)
-end
-end)
+task.wait(0.5)
+patchAllAnimeGuis()
 
-print("[JR] Anime Astral carregado. Aplicando nome, icon e Discord.")
+task.wait(1)
+patchAllAnimeGuis()
+
+task.wait(2)
+patchAllAnimeGuis()
+
+print("[JR] Anime Astral carregado com funcoes originais, nome, icon e Discord alterados.")
